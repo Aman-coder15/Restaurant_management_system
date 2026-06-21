@@ -1,0 +1,18 @@
+const jwt = require('jsonwebtoken');
+
+module.exports = (req, res, next) => {
+  // get token from header 
+  const authHeader = req.header('Authorization');
+  if (!authHeader) {
+    return res.status(401).json({ message: " Access Denied . Token is missing " });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
+    next(); //move to the next function(controller)
+  } catch (err) {
+    res.status(400).json({ message: " Invalid Token " });
+  }
+};
