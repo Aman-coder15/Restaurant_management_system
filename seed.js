@@ -3,20 +3,20 @@ const Menu = require('./models/Menu');
 const Table = require('./models/Table');
 const Inventory = require('./models/Inventory');
 
-// डेटाबेस कनेक्शन
+// database connection
 mongoose.connect('mongodb://localhost:27017/restaurant_db')
   .then(() => console.log('MongoDB Connected for Rich Seeding...'))
   .catch(err => console.log(err));
 
 const seedData = async () => {
   try {
-    // 1. पुराना डेटा साफ़ करें
+    // 1. clear old data
     await Menu.deleteMany();
     await Table.deleteMany();
     await Inventory.deleteMany();
     console.log('🧹 Old data cleared.');
 
-    // 2. बेहतरीन इन्वेंट्री (Raw Materials) स्टॉक जोड़ें
+    // 2. add stock of raw materials
     const inventoryItems = await Inventory.insertMany([
       { itemName: 'Cheese', stockQuantity: 25, unit: 'kg', minStockLevel: 5 },
       { itemName: 'Flour', stockQuantity: 60, unit: 'kg', minStockLevel: 10 },
@@ -26,9 +26,9 @@ const seedData = async () => {
       { itemName: 'Paneer', stockQuantity: 15, unit: 'kg', minStockLevel: 3 },
       { itemName: 'Vegetables', stockQuantity: 30, unit: 'kg', minStockLevel: 5 }
     ]);
-    console.log('📦 Rich Inventory Stock Added.');
+    console.log(' Rich Inventory Stock Added.');
 
-    // 3. वैरायटी के साथ शानदार मेन्यू आइटम्स जोड़ें
+    // 3. Add menu item with variety
     await Menu.insertMany([
       {
         name: 'Margherita Pizza',
@@ -74,9 +74,9 @@ const seedData = async () => {
         ]
       }
     ]);
-    console.log('🍕 Expanded Menu Items Added.');
+    console.log(' Expanded Menu Items Added.');
 
-    // 4. अलग-अलग कैपेसिटी की टेबल्स जोड़ें
+    // 4. add tables with different variety
     await Table.insertMany([
       { tableNumber: 1, capacity: 2, status: 'Available' },
       { tableNumber: 2, capacity: 2, status: 'Available' },
@@ -85,12 +85,12 @@ const seedData = async () => {
       { tableNumber: 5, capacity: 6, status: 'Available' },
       { tableNumber: 6, capacity: 8, status: 'Available' }
     ]);
-    console.log('🪑 Multi-capacity Tables Added.');
+    console.log(' Multi-capacity Tables Added.');
 
-    console.log('🎉 Data Seeding Successfully Completed with Rich Dataset!');
+    console.log(' Data Seeding Successfully Completed with Rich Dataset!');
     process.exit();
   } catch (error) {
-    console.error('❌ Error seeding data:', error);
+    console.error(' Error seeding data:', error);
     process.exit(1);
   }
 };
